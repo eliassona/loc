@@ -1,8 +1,14 @@
 # loc
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library designed to count lines of code
 
 ## Usage
+
+```clojure
+=> (use 'loc.core)
+=> (loc "mydir") 
+42
+```
 
 FIXME
 

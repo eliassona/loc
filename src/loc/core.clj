@@ -3,14 +3,14 @@
   (:require [apartial.core :refer [apartial]])
   (:import [java.io File]))
 
-(defn java-filter [f] (.endsWith (.getName f) ".java"))
-(defn scala-filter [f] (.endsWith (.getName f) ".scala"))
-(defn clojure-filter [f] (.endsWith (.getName f) ".clj"))
+
 
 
 (defn count-loc [f] (count (.split (slurp f) "\n")))
+
 (defprotocol ILoc
-  (loc [this filter-fn]))
+  (loc [this filter-fn])
+  (ends-with? [this s]))
 
 (extend-protocol ILoc
   File
@@ -20,12 +20,18 @@
       (count-loc f)
       0)
     (reduce + (map (apartial loc _ filter-fn) (.listFiles f)))))
+  (ends-with? [f s] (ends-with? (.getName f) s))
   String 
   (loc [filename filter-fn] (loc (File. filename) filter-fn))
+  (ends-with? [filename s] (.endsWith filename s))
   java.util.List
-  (loc [l filter-fn] (map (apartial loc _ filter-fn) l)) 
+  (loc [l filter-fn] (map (apartial loc _ filter-fn) l))
+  (ends-with? [l s] (map (apartial ends-with? _ s) l))
   )
   
+(defn java-filter [f] (ends-with? f ".java"))
+(defn scala-filter [f] (ends-with? f ".scala"))
+(defn clojure-filter [f] (ends-with? f ".clj"))
 
 (defn package-loc 
   ([package-dir sub-dir]
