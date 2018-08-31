@@ -43,3 +43,8 @@
       (package-loc package-dir "test")
       (package-loc package-dir "build")
    )))
+
+
+(comment 
+  ;example of sorting by size of source
+  (pprint (sort-by (comp :src val) (package-loc (.getAbsolutePath (File. (.getParentFile (File. (System/getenv "MZ_HOME"))) "packages")))))
